@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cowork OS — Pedersen Toyota</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #131008;
+      --bg2:       #1c160e;
+      --bg3:       #251f14;
+      --border:    rgba(255,255,255,0.08);
+      --accent:    #d97b52;
+      --accent2:   #e8a87c;
+      --gold:      #c9a96e;
+      --text:      #f0ead8;
+      --muted:     #8a7e6a;
+      --green:     #5cb87a;
+      --red:       #c9615e;
+      --blue:      #5b8fd4;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 14px 32px;
+      background: rgba(19,16,8,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      overflow-x: auto;
+    }
+
+    .nav-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-right: 16px;
+      flex-shrink: 0;
+    }
+    .nav-brand .star {
+      font-size: 22px;
+      color: var(--accent);
+    }
+    .nav-brand span {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px;
+      color: var(--text);
+      white-space: nowrap;
+    }
+    .nav-brand em {
+      font-style: italic;
+      color: var(--accent2);
+    }
+
+    .nav-tab {
+      padding: 7px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+      color: var(--muted);
+      background: transparent;
+      border: none;
+      letter-spacing: 0.02em;
+    }
+    .nav-tab:hover { color: var(--text); background: var(--bg3); }
+    .nav-tab.active {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .nav-live {
+      margin-left: auto;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .nav-live .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; } 50% { opacity: 0.4; }
+    }
+
+    /* ── PANELS ── */
+    .panel { display: none; padding: 0 32px 48px; }
+    .panel.active { display: block; }
+
+    /* ── HOME HERO ── */
+    .hero {
+      text-align: center;
+      padding: 56px 0 40px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 40px;
+    }
+    .hero .live-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 5px 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(42px, 7vw, 80px);
+      font-weight: 400;
+      line-height: 1.05;
+      margin-bottom: 18px;
+    }
+    .hero h1 em { font-style: italic; color: var(--accent); }
+    .hero p {
+      color: var(--muted);
+      font-size: 16px;
+      max-width: 520px;
+      margin: 0 auto 40px;
+      line-height: 1.7;
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 56px;
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat .val {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 400;
+      color: var(--text);
+      line-height: 1;
+    }
+    .stat .val.accent { color: var(--gold); }
+    .stat .lbl {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    /* ── SIGNALS ── */
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 400;
+      margin-bottom: 6px;
+    }
+    .section-title em { font-style: italic; color: var(--accent); }
+    .section-sub { color: var(--muted); font-size: 13px; margin-bottom: 24px; }
+
+    .signal-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+
+    .signal-card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+      transition: border-color 0.2s;
+    }
+    .signal-card:hover { border-color: rgba(255,255,255,0.18); }
+    .signal-card .agent-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg3);
+      border-radius: 20px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+    .signal-card .agent-chip .avatar {
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .signal-card h3 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .signal-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .signal-card .tag {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .tag.urgent { background: rgba(201,97,94,0.18); color: var(--red); }
+    .tag.active { background: rgba(92,184,122,0.15); color: var(--green); }
+    .tag.pending { background: rgba(201,169,110,0.15); color: var(--gold); }
+    .tag.info   { background: rgba(91,143,212,0.15); color: var(--blue); }
+
+    /* ── AGENT PAGES ── */
+    .agent-header {
+      padding: 44px 0 32px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .agent-header-left {}
+    .agent-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+    .agent-badge .big-avatar {
+      width: 44px; height: 44px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      font-weight: 700;
+    }
+    .agent-badge .info .name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+    .agent-badge .info .role {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .agent-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.1;
+    }
+    .agent-header h2 em { font-style: italic; color: var(--accent); }
+    .agent-header-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .mini-stat { text-align: right; }
+    .mini-stat .val {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 400;
+      line-height: 1;
+    }
+    .mini-stat .lbl {
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .three-col { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    @media (max-width: 900px) {
+      .two-col, .three-col { grid-template-columns: 1fr; }
+      nav { padding: 12px 16px; }
+      .panel { padding: 0 16px 48px; }
+      .agent-header { flex-direction: column; align-items: flex-start; }
+      .mini-stat { text-align: left; }
+      .stats-row { gap: 32px; }
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    .card-title {
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 16px;
+      font-weight: 600;
+    }
+
+    /* ── LIST ITEMS ── */
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .list-item:last-child { border-bottom: none; }
+    .list-item .main { flex: 1; min-width: 0; }
+    .list-item .main .name { font-size: 14px; font-weight: 500; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .list-item .main .sub { font-size: 12px; color: var(--muted); margin-top: 2px; }
+    .list-item .right { text-align: right; flex-shrink: 0; }
+    .list-item .right .amount { font-size: 14px; font-weight: 600; color: var(--gold); }
+    .list-item .right .time { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+    /* ── PROGRESS ── */
+    .progress-row { margin-bottom: 14px; }
+    .progress-row:last-child { margin-bottom: 0; }
+    .progress-label { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+    .progress-label span:last-child { color: var(--muted); font-size: 12px; }
+    .progress-bar { background: var(--bg3); border-radius: 4px; height: 6px; }
+    .progress-fill { height: 100%; border-radius: 4px; transition: width 0.6s; }
+    .fill-accent { background: var(--accent); }
+    .fill-gold   { background: var(--gold); }
+    .fill-green  { background: var(--green); }
+    .fill-blue   { background: var(--blue); }
+
+    /* ── CHECKLIST ── */
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 9px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .check-item:last-child { border-bottom: none; }
+    .check-item input[type=checkbox] {
+      appearance: none;
+      width: 16px; height: 16px;
+      border: 1.5px solid var(--muted);
+      border-radius: 4px;
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+      position: relative;
+    }
+    .check-item input[type=checkbox]:checked {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    .check-item input[type=checkbox]:checked::after {
+      content: '✓';
+      position: absolute;
+      top: -1px; left: 2px;
+      font-size: 11px;
+      color: #fff;
+      font-weight: 700;
+    }
+    .check-item .check-text { flex: 1; line-height: 1.5; }
+    .check-item .check-text.done { text-decoration: line-through; color: var(--muted); }
+
+    /* ── INPUT AREA ── */
+    .prompt-bar {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    .prompt-bar input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text);
+      font-size: 14px;
+      font-family: 'Inter', sans-serif;
+    }
+    .prompt-bar input::placeholder { color: var(--muted); }
+    .prompt-bar button {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 7px;
+      padding: 7px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .prompt-bar button:hover { opacity: 0.85; }
+
+    /* ── PIPELINE STAGE ── */
+    .pipeline {
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+    .pipeline-col {
+      flex-shrink: 0;
+      width: 200px;
+    }
+    .pipeline-col .col-header {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+    }
+    .pipeline-card {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .pipeline-card .pc-name { font-weight: 600; margin-bottom: 4px; }
+    .pipeline-card .pc-sub { color: var(--muted); font-size: 11px; }
+
+    /* ── SCROLL ── */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--bg3); border-radius: 3px; }
+
+    /* ── CHAT ── */
+    .chat-history {
+      max-height: 400px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 14px;
+      padding-top: 4px;
+    }
+    .chat-msg { display: flex; align-items: flex-start; gap: 10px; }
+    .chat-msg.user { flex-direction: row-reverse; }
+    .chat-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 700; flex-shrink: 0;
+    }
+    .chat-bubble {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .chat-bubble p { margin: 0; }
+    .chat-bubble p + p { margin-top: 8px; }
+    .chat-msg.user .chat-bubble {
+      background: var(--accent);
+      color: #fff;
+      border-radius: 14px 14px 4px 14px;
+    }
+    .chat-msg.agent .chat-bubble {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 14px 14px 14px 4px;
+    }
+    .typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      padding: 12px 16px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 14px 14px 14px 4px;
+    }
+    .typing-indicator span {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--muted);
+      display: inline-block;
+      animation: bounce 1.2s infinite ease-in-out;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%,60%,100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">
+    <span class="star">✦</span>
+    <span><em>Cowork</em> OS</span>
+  </div>
+  <button class="nav-tab active" onclick="show('home')">Home</button>
+  <button class="nav-tab" onclick="show('linda')">Customer Follow Up</button>
+  <button class="nav-tab" onclick="show('christi')">Office Coordinator</button>
+  <button class="nav-tab" onclick="show('margaret')">Development &amp; Projects</button>
+  <button class="nav-tab" onclick="show('grant')">Closing Tools</button>
+  <button class="nav-tab" onclick="show('isaac')">Research</button>
+  <button class="nav-tab" onclick="show('seth')">Outreach &amp; Social</button>
+  <button class="nav-tab" onclick="show('oliver')">Lead Generator</button>
+  <div class="nav-live">
+    <span class="dot"></span>
+    <span id="live-date">LIVE</span>
+  </div>
+</nav>
+
+
+<!-- ══════════ HOME ══════════ -->
+<div class="panel active" id="home">
+  <div class="hero">
+    <div class="live-badge">
+      <span class="dot" style="width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block;animation:pulse 2s infinite;"></span>
+      <span id="hero-date">TUESDAY, MAY 20</span>
+    </div>
+    <h1>Your <em>Cowork</em> OS</h1>
+    <p>One pane for your customer pipeline, today's priorities, revenue toward your goals, and every agent you've activated.</p>
+    <div class="stats-row">
+      <div class="stat"><div class="val">14</div><div class="lbl">In Pipeline</div></div>
+      <div class="stat"><div class="val">7</div><div class="lbl">Agents Active</div></div>
+      <div class="stat"><div class="val">3</div><div class="lbl">Follow-Ups Today</div></div>
+      <div class="stat"><div class="val accent">$312k</div><div class="lbl">MTD Revenue</div></div>
+    </div>
+  </div>
+
+  <div class="section-title">Today's <em>3 signals</em></div>
+  <p class="section-sub">The high-leverage moves that drive the business forward. Everything else is noise.</p>
+
+  <div class="signal-grid">
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#5b3a8c;color:#c9a9f0;">L</div>
+        <span>Linda · Customer Follow Up</span>
+      </div>
+      <h3>3 customers awaiting follow-up</h3>
+      <p>Martinez, Okonkwo & Reyes — all reached out in the last 24 hrs. Hot leads flagged for callback by 2pm.</p>
+      <span class="tag urgent">Urgent</span>
+    </div>
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#1a4d3a;color:#5cb87a;">G</div>
+        <span>Grant · Closing Tools</span>
+      </div>
+      <h3>2 deals in final signing stage</h3>
+      <p>Camry deal for Johnson needs F&amp;I coordination. RAV4 for Williams — paperwork ready, awaiting customer.</p>
+      <span class="tag active">In Progress</span>
+    </div>
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#3a2e14;color:#c9a96e;">S</div>
+        <span>Seth · Social Media</span>
+      </div>
+      <h3>Post window open: 12–1pm</h3>
+      <p>New Tacoma delivery post ready for approval. Instagram + Facebook copy drafted. Peak engagement window.</p>
+      <span class="tag pending">Awaiting Approval</span>
+    </div>
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#1e3a52;color:#5b8fd4;">O</div>
+        <span>Oliver · Lead Generator</span>
+      </div>
+      <h3>7 new web leads from overnight</h3>
+      <p>AutoTrader + Dealer.com submitted 7 leads since 10pm. 4 are in-market within 50 miles, scored 80+.</p>
+      <span class="tag info">New Leads</span>
+    </div>
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#4d1a1a;color:#c9615e;">I</div>
+        <span>Isaac · Research</span>
+      </div>
+      <h3>Competitor pricing update ready</h3>
+      <p>Autonation Ft. Collins dropped RAV4 by $800. Market analysis summary available for review.</p>
+      <span class="tag info">Report Ready</span>
+    </div>
+    <div class="signal-card">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#2a3a1a;color:#8dc45b;">M</div>
+        <span>Margaret · Development</span>
+      </div>
+      <h3>Highlight Sheet v2 ready for testing</h3>
+      <p>New Vehicle Highlight Sheet skill updated with CarFax integration. Staging review requested by EOD.</p>
+      <span class="tag pending">Review Needed</span>
+    </div>
+  </div>
+
+  <div class="section-title">Your <em>agents</em></div>
+  <p class="section-sub">Click any agent tab above to see their full workspace.</p>
+  <div class="signal-grid">
+    <div class="signal-card" style="cursor:pointer;" onclick="show('linda')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#5b3a8c;color:#c9a9f0;">L</div>
+        <span style="color:var(--accent2);font-weight:700;">Linda</span>
+      </div>
+      <h3>Customer Follow Up</h3>
+      <p>Manages inbound and outbound customer touchpoints, satisfaction calls, and follow-up sequences.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('christi')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#3a1a4a;color:#d4a0e8;">C</div>
+        <span style="color:var(--accent2);font-weight:700;">Christi</span>
+      </div>
+      <h3>Office Coordinator</h3>
+      <p>Handles scheduling, internal communications, vendor coordination, and daily office operations.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('margaret')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#2a3a1a;color:#8dc45b;">M</div>
+        <span style="color:var(--accent2);font-weight:700;">Margaret</span>
+      </div>
+      <h3>Development &amp; Projects</h3>
+      <p>Builds and maintains Claude skills, dashboards, tools and automation for the dealership.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('grant')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#1a4d3a;color:#5cb87a;">G</div>
+        <span style="color:var(--accent2);font-weight:700;">Grant</span>
+      </div>
+      <h3>Closing Tools</h3>
+      <p>Manages deal structuring, F&amp;I workflow, contract checklists, and final closing documentation.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('isaac')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#4d1a1a;color:#c9615e;">I</div>
+        <span style="color:var(--accent2);font-weight:700;">Isaac</span>
+      </div>
+      <h3>Research</h3>
+      <p>Runs competitive analysis, market pricing data, inventory research, and customer insight reports.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('seth')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#3a2e14;color:#c9a96e;">S</div>
+        <span style="color:var(--accent2);font-weight:700;">Seth</span>
+      </div>
+      <h3>Outreach &amp; Social Media</h3>
+      <p>Creates and schedules posts, runs campaigns, tracks engagement, and manages brand voice online.</p>
+    </div>
+    <div class="signal-card" style="cursor:pointer;" onclick="show('oliver')">
+      <div class="agent-chip">
+        <div class="avatar" style="background:#1e3a52;color:#5b8fd4;">O</div>
+        <span style="color:var(--accent2);font-weight:700;">Oliver</span>
+      </div>
+      <h3>Lead Generator &amp; Follow Up</h3>
+      <p>Scores and routes inbound leads, runs email/text sequences, and tracks conversion pipeline.</p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ LINDA ══════════ -->
+<div class="panel" id="linda">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#5b3a8c;color:#c9a9f0;">L</div>
+        <div class="info">
+          <div class="name">Linda</div>
+          <div class="role">Customer Follow Up Agent</div>
+        </div>
+      </div>
+      <h2>Customer <em>Follow Up</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">12</div><div class="lbl">Open Follow-Ups</div></div>
+      <div class="mini-stat"><div class="val">94%</div><div class="lbl">Response Rate</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--green);">8</div><div class="lbl">Completed Today</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Priority Follow-Ups Today</div>
+      <div class="list-item">
+        <div class="main"><div class="name">Elena Martinez</div><div class="sub">Interested in 2025 Camry XSE — test drive Sat</div></div>
+        <div class="right"><span class="tag urgent">Call Now</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">David Okonkwo</div><div class="sub">RAV4 Hybrid — waiting on trade appraisal</div></div>
+        <div class="right"><span class="tag urgent">Call Now</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Priya Reyes</div><div class="sub">Highlander — spouse needs to come in</div></div>
+        <div class="right"><span class="tag pending">By 4pm</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Tom Bergman</div><div class="sub">Tundra inquiry from 3 days ago</div></div>
+        <div class="right"><span class="tag pending">Text</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Lisa Chan</div><div class="sub">Post-purchase 30-day satisfaction check</div></div>
+        <div class="right"><span class="tag active">Scheduled</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Follow-Up Completion This Week</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Monday</span><span>11 / 11</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:100%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Tuesday</span><span>8 / 12</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-accent" style="width:66%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Wednesday</span><span>0 / 9</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-accent" style="width:0%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>CSI Score Goal</span><span>4.8 / 5.0</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:96%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>30-Day Calls</span><span>22 / 30</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:73%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Linda</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. Draft a follow-up text for Elena Martinez about the Camry..." />
+      <button>Send to Linda →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ CHRISTI ══════════ -->
+<div class="panel" id="christi">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#3a1a4a;color:#d4a0e8;">C</div>
+        <div class="info">
+          <div class="name">Christi</div>
+          <div class="role">Office Coordinator</div>
+        </div>
+      </div>
+      <h2>Office <em>Coordinator</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">5</div><div class="lbl">Tasks Open</div></div>
+      <div class="mini-stat"><div class="val">3</div><div class="lbl">Meetings Today</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Today's Task List</div>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">Confirm afternoon appointment times with service dept</span></label>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">Send weekly inventory report to Jeff</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Coordinate loaner vehicle for Williams repair</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Order supplies — toner + envelopes</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Confirm Friday team lunch reservation (7 people)</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">File May 1–15 deal jackets</span></label>
+    </div>
+    <div class="card">
+      <div class="card-title">Upcoming Schedule</div>
+      <div class="list-item">
+        <div class="main"><div class="name">10:00am — Sales Meeting</div><div class="sub">Weekly pipeline review, conference room B</div></div>
+        <div class="right"><span class="tag active">Today</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">1:30pm — Vendor Call</div><div class="sub">DealerSocket CRM renewal discussion</div></div>
+        <div class="right"><span class="tag pending">Today</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">3:00pm — New Hire Orientation</div><div class="sub">Finance onboarding, HR room</div></div>
+        <div class="right"><span class="tag pending">Today</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Tomorrow 9am — GM Check-In</div><div class="sub">Monthly ops review with Jeff</div></div>
+        <div class="right"><span class="tag info">Tomorrow</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Christi</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. Draft a meeting agenda for tomorrow's GM check-in..." />
+      <button>Send to Christi →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ MARGARET ══════════ -->
+<div class="panel" id="margaret">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#2a3a1a;color:#8dc45b;">M</div>
+        <div class="info">
+          <div class="name">Margaret</div>
+          <div class="role">Developer Agent</div>
+        </div>
+      </div>
+      <h2>Development <em>&amp; Projects</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">4</div><div class="lbl">Active Projects</div></div>
+      <div class="mini-stat"><div class="val">2</div><div class="lbl">In Review</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--green);">11</div><div class="lbl">Shipped This Month</div></div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-bottom:20px;">
+    <div class="card-title">Project Pipeline</div>
+    <div class="pipeline">
+      <div class="pipeline-col">
+        <div class="col-header"><span>Backlog</span><span>3</span></div>
+        <div class="pipeline-card"><div class="pc-name">Service Appt Skill</div><div class="pc-sub">Auto-book service calls</div></div>
+        <div class="pipeline-card"><div class="pc-name">Trade Value Tool</div><div class="pc-sub">KBB API integration</div></div>
+        <div class="pipeline-card"><div class="pc-name">SMS Blast Agent</div><div class="pc-sub">Outreach automation</div></div>
+      </div>
+      <div class="pipeline-col">
+        <div class="col-header"><span>In Progress</span><span>4</span></div>
+        <div class="pipeline-card" style="border-color:var(--accent);"><div class="pc-name">Cowork OS Dashboard</div><div class="pc-sub">This dashboard — final polish</div></div>
+        <div class="pipeline-card"><div class="pc-name">Highlight Sheet v2</div><div class="pc-sub">CarFax PDF integration</div></div>
+        <div class="pipeline-card"><div class="pc-name">Competitor Compare Tool</div><div class="pc-sub">Live pricing vs AutoNation</div></div>
+        <div class="pipeline-card"><div class="pc-name">Lead Scoring Model</div><div class="pc-sub">Oliver integration point</div></div>
+      </div>
+      <div class="pipeline-col">
+        <div class="col-header"><span>In Review</span><span>2</span></div>
+        <div class="pipeline-card"><div class="pc-name">Garage Fit Test</div><div class="pc-sub">Dimension comparison skill</div></div>
+        <div class="pipeline-card"><div class="pc-name">Toyota PDF Brochure</div><div class="pc-sub">Auto-generate from VIN</div></div>
+      </div>
+      <div class="pipeline-col">
+        <div class="col-header"><span>Shipped</span><span>11</span></div>
+        <div class="pipeline-card" style="opacity:0.6;"><div class="pc-name">Used Vehicle Highlight Sheet</div><div class="pc-sub">✓ Live</div></div>
+        <div class="pipeline-card" style="opacity:0.6;"><div class="pc-name">Trim Comparison Tool</div><div class="pc-sub">✓ Live</div></div>
+        <div class="pipeline-card" style="opacity:0.6;"><div class="pc-name">Vehicle Preference Tracker</div><div class="pc-sub">✓ Live</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Margaret</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. Build a skill that generates a service reminder email from a RO number..." />
+      <button>Send to Margaret →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ GRANT ══════════ -->
+<div class="panel" id="grant">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#1a4d3a;color:#5cb87a;">G</div>
+        <div class="info">
+          <div class="name">Grant</div>
+          <div class="role">Closing Agent</div>
+        </div>
+      </div>
+      <h2>Closing <em>Tools</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">6</div><div class="lbl">Active Deals</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--gold);">$187k</div><div class="lbl">Pending Revenue</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--green);">3</div><div class="lbl">Closed Today</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Active Deals</div>
+      <div class="list-item">
+        <div class="main"><div class="name">Johnson — 2025 Camry XSE</div><div class="sub">In F&I · Needs GAP decision</div></div>
+        <div class="right"><div class="amount">$34,200</div><div class="time">🔴 Hot</div></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Williams — 2025 RAV4 Hybrid</div><div class="sub">Paperwork ready · Customer en route</div></div>
+        <div class="right"><div class="amount">$41,500</div><div class="time">🟢 Ready</div></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Nguyen — 2024 Tacoma TRD</div><div class="sub">Trade-in value being finalized</div></div>
+        <div class="right"><div class="amount">$38,900</div><div class="time">🟡 Pending</div></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Patterson — 2025 Highlander Plat</div><div class="sub">Credit approved · Scheduling delivery</div></div>
+        <div class="right"><div class="amount">$56,400</div><div class="time">🟢 Ready</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Closing Checklist — Williams RAV4</div>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">Credit approval received</span></label>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">Trade-in appraisal completed</span></label>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">F&amp;I products presented</span></label>
+      <label class="check-item"><input type="checkbox" checked /><span class="check-text done">Purchase agreement signed</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Title paperwork — in progress</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Delivery inspection &amp; walkthrough</span></label>
+      <label class="check-item"><input type="checkbox" /><span class="check-text">Keys &amp; handshake photo for social</span></label>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Grant</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. What F&I products should I present to a customer financing a $41k RAV4?..." />
+      <button>Send to Grant →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ ISAAC ══════════ -->
+<div class="panel" id="isaac">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#4d1a1a;color:#e8a0a0;">I</div>
+        <div class="info">
+          <div class="name">Isaac</div>
+          <div class="role">Research Agent</div>
+        </div>
+      </div>
+      <h2>Market <em>Research</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">5</div><div class="lbl">Open Reports</div></div>
+      <div class="mini-stat"><div class="val">2</div><div class="lbl">Ready to Review</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Research Queue</div>
+      <div class="list-item">
+        <div class="main"><div class="name">Competitor Pricing — RAV4</div><div class="sub">AutoNation, Loveland Toyota, Fort Collins</div></div>
+        <div class="right"><span class="tag active">Ready</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Trade-In Market Trends — May 2026</div><div class="sub">KBB + Manheim wholesale data</div></div>
+        <div class="right"><span class="tag active">Ready</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Customer Persona Refresh</div><div class="sub">Updating buyer profiles for Highlander/Sequoia</div></div>
+        <div class="right"><span class="tag pending">In Progress</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">EV Adoption Rate — Northern CO</div><div class="sub">bZ4X opportunity analysis</div></div>
+        <div class="right"><span class="tag info">Queued</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Internet Lead Source ROI</div><div class="sub">AutoTrader vs Dealer.com vs Cars.com</div></div>
+        <div class="right"><span class="tag info">Queued</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Market Snapshot — Northern CO</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>RAV4 vs Market Avg</span><span>+$400 above</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:62%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Camry — Days on Lot Avg</span><span>18 days</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:78%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Tacoma — Inventory Velocity</span><span>Fast</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-accent" style="width:88%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Highlander — Lead-to-Appt Rate</span><span>34%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:34%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Isaac</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. What are competitors pricing the 2025 Tacoma TRD Off-Road at in Colorado?..." />
+      <button>Send to Isaac →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ SETH ══════════ -->
+<div class="panel" id="seth">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#3a2e14;color:#c9a96e;">S</div>
+        <div class="info">
+          <div class="name">Seth</div>
+          <div class="role">Social Media &amp; Outreach Agent</div>
+        </div>
+      </div>
+      <h2>Outreach &amp; <em>Social Media</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">4</div><div class="lbl">Posts Queued</div></div>
+      <div class="mini-stat"><div class="val">1.2k</div><div class="lbl">Reach This Week</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--green);">6.4%</div><div class="lbl">Avg Engagement</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Content Queue</div>
+      <div class="list-item">
+        <div class="main"><div class="name">Tacoma Delivery — Johnson</div><div class="sub">Instagram + Facebook · Photo ready</div></div>
+        <div class="right"><span class="tag urgent">Post Now</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">"Truck Month" Campaign — Week 3</div><div class="sub">Tundra &amp; Tacoma specials</div></div>
+        <div class="right"><span class="tag pending">Tomorrow 9am</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Service Special — Summer Tires</div><div class="sub">Facebook ad — $200 budget approved</div></div>
+        <div class="right"><span class="tag info">Wed</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Employee Spotlight — Jeff L.</div><div class="sub">LinkedIn feature post</div></div>
+        <div class="right"><span class="tag info">Thu</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Platform Performance</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Facebook</span><span>648 reach</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:72%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Instagram</span><span>412 reach</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-accent" style="width:54%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>LinkedIn</span><span>186 reach</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:28%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Google Reviews</span><span>4.8 ★ (312)</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:96%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Seth</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. Write a caption for a Tacoma delivery post with a fun truck-month hook..." />
+      <button>Send to Seth →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════ OLIVER ══════════ -->
+<div class="panel" id="oliver">
+  <div class="agent-header">
+    <div class="agent-header-left">
+      <div class="agent-badge">
+        <div class="big-avatar" style="background:#1e3a52;color:#5b8fd4;">O</div>
+        <div class="info">
+          <div class="name">Oliver</div>
+          <div class="role">Lead Generator &amp; Follow Up Agent</div>
+        </div>
+      </div>
+      <h2>Lead Generator <em>&amp; Follow Up</em></h2>
+    </div>
+    <div class="agent-header-stats">
+      <div class="mini-stat"><div class="val">7</div><div class="lbl">New Leads</div></div>
+      <div class="mini-stat"><div class="val">31</div><div class="lbl">In Sequence</div></div>
+      <div class="mini-stat"><div class="val" style="color:var(--gold);">22%</div><div class="lbl">Conversion Rate</div></div>
+    </div>
+  </div>
+
+  <div class="two-col" style="margin-bottom:20px;">
+    <div class="card">
+      <div class="card-title">Hot Leads — Score 80+</div>
+      <div class="list-item">
+        <div class="main"><div class="name">Kevin Marsh — AutoTrader</div><div class="sub">2025 RAV4 · 28mi away · 94 score</div></div>
+        <div class="right"><div class="time">2h ago</div><span class="tag urgent">Call</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Adriana Voss — Dealer.com</div><div class="sub">Camry XLE · Trade-in mentioned · 88 score</div></div>
+        <div class="right"><div class="time">4h ago</div><span class="tag urgent">Call</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Robert Dunn — Cars.com</div><div class="sub">Tacoma TRD Pro · In-market · 85 score</div></div>
+        <div class="right"><div class="time">6h ago</div><span class="tag pending">Text</span></div>
+      </div>
+      <div class="list-item">
+        <div class="main"><div class="name">Mei-Ling Torres — Website</div><div class="sub">Highlander · Family buyer · 82 score</div></div>
+        <div class="right"><div class="time">8h ago</div><span class="tag pending">Email</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Lead Funnel</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>New Leads (7)</span><span></span></div>
+        <div class="progress-bar"><div class="progress-fill fill-blue" style="width:100%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Contacted (5)</span><span>71%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-accent" style="width:71%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Appointments Set (3)</span><span>43%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-gold" style="width:43%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Shown (2)</span><span>29%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:29%"></div></div>
+      </div>
+      <div class="progress-row">
+        <div class="progress-label"><span>Closed (1)</span><span>14%</span></div>
+        <div class="progress-bar"><div class="progress-fill fill-green" style="width:14%"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Ask Oliver</div>
+    <div class="prompt-bar">
+      <input type="text" placeholder="e.g. Write a first-contact text for Kevin Marsh about the RAV4 he viewed online..." />
+      <button>Send to Oliver →</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+  // ── TAB SWITCHING ──
+  function show(id) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    const labels = {
+      home: 'Home', linda: 'Customer Follow Up', christi: 'Office Coordinator',
+      margaret: 'Development & Projects', grant: 'Closing Tools',
+      isaac: 'Research', seth: 'Outreach & Social', oliver: 'Lead Generator'
+    };
+    document.querySelectorAll('.nav-tab').forEach(t => {
+      if (t.textContent.replace(/\s+/g,' ').trim() === labels[id].replace(/&amp;/g,'&')) {
+        t.classList.add('active');
+      }
+    });
+  }
+
+  // ── LIVE DATE ──
+  function setDate() {
+    const d = new Date();
+    const days = ['SUNDAY','MONDAY','TUESDAY','WEDNESDAY','THURSDAY','FRIDAY','SATURDAY'];
+    const months = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE','JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+    const str = `${days[d.getDay()]}, ${months[d.getMonth()]} ${d.getDate()}`;
+    const el1 = document.getElementById('live-date');
+    const el2 = document.getElementById('hero-date');
+    if (el1) el1.textContent = 'LIVE · ' + str;
+    if (el2) el2.textContent = str;
+  }
+  setDate();
+
+  // ── AGENT CONFIG ──
+  const agentColors = {
+    linda:    { bg: '#5b3a8c', color: '#c9a9f0' },
+    christi:  { bg: '#3a1a4a', color: '#d4a0e8' },
+    margaret: { bg: '#2a3a1a', color: '#8dc45b' },
+    grant:    { bg: '#1a4d3a', color: '#5cb87a' },
+    isaac:    { bg: '#4d1a1a', color: '#e8a0a0' },
+    seth:     { bg: '#3a2e14', color: '#c9a96e' },
+    oliver:   { bg: '#1e3a52', color: '#5b8fd4' }
+  };
+
+  const agentHistories = {};
+
+  function getAgent(btn) {
+    const text = btn.textContent.toLowerCase();
+    return Object.keys(agentColors).find(n => text.includes(n)) || null;
+  }
+
+  function escHtml(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  function formatText(s) {
+    return escHtml(s)
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.*?)\*/g, '<em>$1</em>')
+      .replace(/\n\n+/g, '</p><p>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function appendMsg(histDiv, role, text, agent) {
+    const c = agentColors[agent] || { bg:'#333', color:'#fff' };
+    const init = agent ? agent[0].toUpperCase() : '?';
+    const div = document.createElement('div');
+    div.className = `chat-msg ${role}`;
+    if (role === 'user') {
+      div.innerHTML = `<div class="chat-bubble">${escHtml(text)}</div><div class="chat-avatar" style="background:var(--bg3);color:var(--muted);">YOU</div>`;
+    } else {
+      div.innerHTML = `<div class="chat-avatar" style="background:${c.bg};color:${c.color};">${init}</div><div class="chat-bubble"><p>${formatText(text)}</p></div>`;
+    }
+    histDiv.appendChild(div);
+    histDiv.scrollTop = histDiv.scrollHeight;
+    return div;
+  }
+
+  function getOrCreateHistDiv(bar) {
+    let h = bar.parentElement.querySelector('.chat-history');
+    if (!h) {
+      h = document.createElement('div');
+      h.className = 'chat-history';
+      bar.parentElement.appendChild(h);
+    }
+    return h;
+  }
+
+  async function sendToAgent(btn) {
+    const bar = btn.closest('.prompt-bar');
+    const input = bar.querySelector('input');
+    const msg = input.value.trim();
+    if (!msg || btn.disabled) return;
+
+    const agent = getAgent(btn);
+    if (!agent) return;
+
+    const histDiv = getOrCreateHistDiv(bar);
+    if (!agentHistories[agent]) agentHistories[agent] = [];
+    const history = agentHistories[agent];
+
+    appendMsg(histDiv, 'user', msg, agent);
+    input.value = '';
+    btn.disabled = true;
+    const origText = btn.textContent;
+    btn.textContent = '...';
+
+    const c = agentColors[agent];
+    const init = agent[0].toUpperCase();
+    const typing = document.createElement('div');
+    typing.className = 'chat-msg agent';
+    typing.innerHTML = `<div class="chat-avatar" style="background:${c.bg};color:${c.color};">${init}</div><div class="typing-indicator"><span></span><span></span><span></span></div>`;
+    histDiv.appendChild(typing);
+    histDiv.scrollTop = histDiv.scrollHeight;
+
+    try {
+      const res = await fetch('/.netlify/functions/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ agent, message: msg, history })
+      });
+      const data = await res.json();
+      typing.remove();
+      const reply = res.ok ? data.response : (data.error || 'Something went wrong. Please try again.');
+      appendMsg(histDiv, 'agent', reply, agent);
+      if (res.ok) {
+        history.push({ role: 'user', content: msg });
+        history.push({ role: 'assistant', content: data.response });
+      }
+    } catch {
+      typing.remove();
+      appendMsg(histDiv, 'agent', 'Network error — check your connection and try again.', agent);
+    }
+
+    btn.disabled = false;
+    btn.textContent = origText;
+  }
+
+  // ── WIRE UP PROMPT BARS ──
+  document.querySelectorAll('.prompt-bar button').forEach(btn => {
+    btn.addEventListener('click', () => sendToAgent(btn));
+  });
+  document.querySelectorAll('.prompt-bar input').forEach(inp => {
+    inp.addEventListener('keydown', e => {
+      if (e.key === 'Enter') inp.nextElementSibling.click();
+    });
+  });
+</script>
+</body>
+</html>

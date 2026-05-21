@@ -1,0 +1,8 @@
+{
+  "name": "pedersen-toyota-cowork-os",
+  "version": "1.0.0",
+  "description": "Pedersen Toyota Cowork OS — Agent Dashboard",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.54.0"
+  }
+}
